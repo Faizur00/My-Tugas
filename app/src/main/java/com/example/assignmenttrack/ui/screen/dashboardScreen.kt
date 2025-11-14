@@ -1,4 +1,4 @@
-package com.example.assignmenttrack.ui.screens
+package com.example.assignmenttrack.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.data.TaskList
+import com.example.assignmenttrack.data.User
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
@@ -28,7 +29,8 @@ import com.example.assignmenttrack.ui.components.TaskCard
 @Composable
 fun MainDashboard(
     modifier: Modifier = Modifier,
-    onAddTaskClick: () -> Unit = {}
+    onAddTaskClick: () -> Unit = {},
+    onProfileClick: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -36,7 +38,7 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                ProfileSection(name = "Jock Owy")
+                ProfileSection(name = User().name, onProfileClick)
                 TaskListScreen()
             }
             GeneralSubmitButton(

@@ -1,6 +1,7 @@
 package com.example.assignmenttrack.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,11 +27,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.R
+import com.example.assignmenttrack.data.User
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 
 // Profil (bagian atas di dashboard)
 @Composable
-fun ProfileSection(name: String) {
+fun ProfileSection(name: String, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +41,7 @@ fun ProfileSection(name: String) {
     ) {
         Row(
             modifier = Modifier
-                .padding(top = 10.dp),
+                .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // bagian buat show profile pict
@@ -54,16 +56,16 @@ fun ProfileSection(name: String) {
                         .padding(all = 8.dp)
                         .clip(shape = CircleShape)
                         .border(width = 1.dp, color = Color.Black, shape = CircleShape),
-                    painter = painterResource(id = R.drawable.profile),
+                    painter = painterResource(id = User().ProfilePictureId),
                     contentDescription = ("User Profile"),
                 )
 
                 Column {
                     Text(
                         text = "Halo!",
-                        color = Color.Black, style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF2260FF), style = MaterialTheme.typography.titleMedium,
                         fontFamily = leagueSpartan,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp)
                     )
 
@@ -81,24 +83,19 @@ fun ProfileSection(name: String) {
 
             // setting button/notif (kgk tau buat apaan pakek aja dlu)
             IconButton(
-                onClick = { /* Handle button click */ },
+                onClick = onClick,
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(end = 12.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFCAD6FF))
                     .align(Alignment.CenterVertically)
             ) {
-                Surface(
-                    modifier = Modifier.size(42.dp),
-                    shape = CircleShape,
-                    color = Color(0xFFCAD6FF)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.Gray,
-                        modifier = Modifier
-                                .padding(8.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Black,
+                    modifier = Modifier
+                )
             }
         }
     }

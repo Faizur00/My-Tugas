@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import java.time.LocalDateTime
@@ -36,15 +37,17 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FormField1(
     title: String,
-    value: String, // The current value
-    onValueChange: (String) -> Unit, // The update function
-    modifier: Modifier = Modifier // Always default the modifier
+    titleFontWeight: FontWeight,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column {
         Text(
             title,
             fontFamily = leagueSpartan,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp),
+            fontWeight = titleFontWeight
         )
 
         TextField(
@@ -77,7 +80,7 @@ fun FormField2(
     modifier: Modifier = Modifier
 ) {
     Column {
-        Text(title)
+        Text(title, fontFamily = leagueSpartan, fontWeight = FontWeight.Medium)
 
         OutlinedTextField(
             value = value,
@@ -115,7 +118,7 @@ fun FormFieldDateTime(
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = title,
+            text = title, fontFamily = leagueSpartan, fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 

@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import java.time.Instant
@@ -62,7 +63,8 @@ fun TaskForm(modifier: Modifier = Modifier) {
             FormField1(
                 title = "Assignment Type",
                 value = assignmentType,
-                onValueChange = { assignmentType = it }
+                onValueChange = { assignmentType = it },
+                titleFontWeight = FontWeight.Medium,
             )
         }
 
@@ -74,7 +76,8 @@ fun TaskForm(modifier: Modifier = Modifier) {
             FormField1(
                 title = "Assignment Title",
                 value = assignmentTitle,
-                onValueChange = { assignmentTitle = it }
+                onValueChange = { assignmentTitle = it },
+                titleFontWeight = FontWeight.Medium,
             )
         }
 
