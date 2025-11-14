@@ -1,9 +1,9 @@
 package com.example.assignmenttrack.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,15 +13,22 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Calendar(modifier: Modifier = Modifier){
-    Box(
-        modifier = Modifier
+    Surface(
+        modifier = modifier
             .padding(16.dp)
-            .background(color = Color.Blue)
-            .fillMaxWidth(0.9f)
-            .padding(64.dp),
-        contentAlignment = Alignment.Center
-
-    ){
-        Text(text = "CALENDAR(BLM JADI, GK TAU GMN NJINK CARA BUATNYA)", color = Color.White)
+            .fillMaxWidth(0.9f),
+        color = Color.Blue
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(64.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "CALENDAR(BLM JADI, GK TAU GMN NJINK CARA BUATNYA)",
+                color = Color.White
+            )
+        }
     }
 }

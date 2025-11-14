@@ -1,28 +1,26 @@
 package com.example.assignmenttrack.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-//import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -32,26 +30,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.ExperimentalMaterial3Api
-import java.time.Instant
-import java.time.ZoneId
-import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
-
+import java.time.ZoneId
 
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TaskForm(modifier: Modifier = Modifier){
+fun TaskForm(modifier: Modifier = Modifier) {
     var assignmentType by remember { mutableStateOf("") }
     var assignmentTitle by remember { mutableStateOf("") }
     var assignmentDescription by remember { mutableStateOf("") }
@@ -207,52 +197,54 @@ fun TaskForm(modifier: Modifier = Modifier){
         )
 
         Dialog(onDismissRequest = { showTimePicker = false }) {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(Color(0xFFECF1FF))
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Surface(
+                shape = RoundedCornerShape(20.dp),
+                color = Color(0xFFECF1FF)
             ) {
-                TimePicker(
-                    state = timePickerState,
-                    colors = TimePickerDefaults.colors(
-                        clockDialColor = Color.White,
-                        clockDialSelectedContentColor = Color.White,
-                        selectorColor = Color(0xFF3B82F6),
-                        containerColor = Color.Transparent,
-                        periodSelectorBorderColor = Color.Gray,
-                        periodSelectorSelectedContainerColor = Color(0xFF3B82F6),
-                        periodSelectorUnselectedContainerColor = Color.Transparent,
-                        periodSelectorSelectedContentColor = Color.White,
-                        periodSelectorUnselectedContentColor = Color.DarkGray,
-                        timeSelectorSelectedContainerColor = Color(0xFF3B82F6),
-                        timeSelectorUnselectedContainerColor = Color.White,
-                        timeSelectorSelectedContentColor = Color.White,
-                        timeSelectorUnselectedContentColor = Color.Black,
-                        clockDialUnselectedContentColor = Color.Black
-                    )
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.End
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TextButton(onClick = { showTimePicker = false }) {
-                        Text("Cancel", color = Color.DarkGray)
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        val selectedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
-                        selectedDateTime = selectedDateTime.with(selectedTime)
-                        showTimePicker = false
-                    }) {
-                        Text("OK", color = Color.Black)
+                    TimePicker(
+                        state = timePickerState,
+                        colors = TimePickerDefaults.colors(
+                            clockDialColor = Color.White,
+                            clockDialSelectedContentColor = Color.White,
+                            selectorColor = Color(0xFF3B82F6),
+                            containerColor = Color.Transparent,
+                            periodSelectorBorderColor = Color.Gray,
+                            periodSelectorSelectedContainerColor = Color(0xFF3B82F6),
+                            periodSelectorUnselectedContainerColor = Color.Transparent,
+                            periodSelectorSelectedContentColor = Color.White,
+                            periodSelectorUnselectedContentColor = Color.DarkGray,
+                            timeSelectorSelectedContainerColor = Color(0xFF3B82F6),
+                            timeSelectorUnselectedContainerColor = Color.White,
+                            timeSelectorSelectedContentColor = Color.White,
+                            timeSelectorUnselectedContentColor = Color.Black,
+                            clockDialUnselectedContentColor = Color.Black
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = { showTimePicker = false }) {
+                            Text("Cancel", color = Color.DarkGray)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(onClick = {
+                            val selectedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
+                            selectedDateTime = selectedDateTime.with(selectedTime)
+                            showTimePicker = false
+                        }) {
+                            Text("OK", color = Color.Black)
+                        }
                     }
                 }
             }
         }
     }
-    }
+}

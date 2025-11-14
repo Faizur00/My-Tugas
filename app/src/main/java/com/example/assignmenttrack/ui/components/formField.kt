@@ -1,6 +1,5 @@
 package com.example.assignmenttrack.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +19,9 @@ import androidx.compose.material.icons.filled.MoreTime
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -116,60 +114,64 @@ fun FormFieldDateTime(
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        Box(
+        Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color(0xFFECF1FF))
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xFFECF1FF)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable(onClick = onDateClick)
-                        .padding(vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select Date",
-                        tint = Color.DarkGray
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = dateTime.format(dateFormatter),
-                        color = Color.Black
-                    )
-                }
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable(onClick = onDateClick)
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Select Date",
+                            tint = Color.DarkGray
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = dateTime.format(dateFormatter),
+                            color = Color.Black
+                        )
+                    }
 
-                Divider(
-                    color = Color.Gray.copy(alpha = 0.5f),
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(32.dp)
-                )
+                    Divider(
+                        color = Color.Gray.copy(alpha = 0.5f),
+                        modifier = Modifier
+                            .width(1.dp)
+                            .height(32.dp)
+                    )
 
-                Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable(onClick = onTimeClick)
-                        .padding(vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreTime,
-                        contentDescription = "Select Time",
-                        tint = Color.DarkGray
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = dateTime.format(timeFormatter),
-                        color = Color.Black
-                    )
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable(onClick = onTimeClick)
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreTime,
+                            contentDescription = "Select Time",
+                            tint = Color.DarkGray
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = dateTime.format(timeFormatter),
+                            color = Color.Black
+                        )
+                    }
                 }
             }
         }

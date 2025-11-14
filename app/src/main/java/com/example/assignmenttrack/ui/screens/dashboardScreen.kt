@@ -1,6 +1,5 @@
 package com.example.assignmenttrack.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,24 +32,25 @@ fun MainDashboard(
     modifier: Modifier = Modifier,
     onAddTaskClick: () -> Unit = {}
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFCAD6FF))
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = Color(0xFFCAD6FF)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            ProfileSection(name = "Faiz")
-            TaskListScreen()
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                ProfileSection(name = "Faiz")
+                TaskListScreen()
+            }
+            GeneralSubmitButton(
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(0.9f)
+                    .padding(all = 24.dp),
+                onClick = onAddTaskClick,
+                text = "Tugas Baru"
+            )
         }
-        GeneralSubmitButton(
-            modifier = Modifier
-                .clip(shape = CircleShape)
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(0.9f)
-                .padding(all = 24.dp),
-            onClick = onAddTaskClick,
-            text = "Tugas Baru"
-        )
     }
 }
 
