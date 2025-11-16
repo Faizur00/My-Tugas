@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.data.TaskList
-import com.example.assignmenttrack.data.User
+import com.example.assignmenttrack.Model.TaskList
+import com.example.assignmenttrack.Model.defaultUser
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
@@ -30,7 +30,8 @@ import com.example.assignmenttrack.ui.components.TaskCard
 fun MainDashboard(
     modifier: Modifier = Modifier,
     onAddTaskClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {}
+    onProfileClick: () -> Unit = {},
+    onStatClick: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -38,7 +39,11 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                ProfileSection(name = User().name, onProfileClick)
+                ProfileSection(
+                    name = defaultUser.name,
+                    onProfileClick =  onProfileClick,
+                    onStatClick = onStatClick,
+                )
                 TaskListScreen()
             }
             GeneralSubmitButton(

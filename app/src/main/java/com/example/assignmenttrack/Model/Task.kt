@@ -1,13 +1,19 @@
-package com.example.assignmenttrack.data
+package com.example.assignmenttrack.Model
 
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.Instant
 import java.time.Month
 
+enum class TaskType {
+    Tugas,
+    Kerja,
+    Belajar
+}
+
 data class Task(
     val id: String,
-    val type: String,
+    val type: TaskType,
     val title: String,
     val description: String,
     val deadline: Instant,
@@ -23,7 +29,7 @@ fun createInstant(year: Int, month: Month, day: Int, hour: Int, minute: Int): In
 val TaskList = listOf(
     Task(
         id = "1",
-        type = "Study",
+        type = TaskType.Belajar,
         title = "Study Compose",
         description = "Learn how to build UI with Jetpack Compose",
         status = false,
@@ -32,7 +38,7 @@ val TaskList = listOf(
     ),
     Task(
         id = "2",
-        type = "Work",
+        type = TaskType.Kerja,
         title = "Do Laundry",
         description = "Finish before 6 PM",
         status = false,
@@ -41,7 +47,7 @@ val TaskList = listOf(
     ),
     Task(
         id = "3",
-        type = "Study",
+        type = TaskType.Belajar,
         title = "Read Paper",
         description = "Review the CNN architecture paper",
         status = false,
@@ -50,7 +56,7 @@ val TaskList = listOf(
     ),
     Task(
         id = "4",
-        type = "Homework",
+        type = TaskType.Tugas,
         title = "OOP Homework",
         description = "Defeat dewa babylonia",
         status = false,

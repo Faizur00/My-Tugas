@@ -14,10 +14,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -39,7 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.data.Task
+import com.example.assignmenttrack.Model.Task
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -111,7 +111,7 @@ fun TaskCard(task: Task) {
                         DropdownMenuItem(
                             text = { Text("Complete", color = Color(0xFF728FFC)) },
                             onClick = { /* TODO: Handle complete */ },
-                            leadingIcon = {Icon(imageVector = Icons.Default.Check, tint = Color(0xFF456DEE), contentDescription = "Complete")}
+                            leadingIcon = {Icon(imageVector = Icons.Default.CheckCircle, tint = Color(0xFF456DEE), contentDescription = "Complete")}
                         )
 
                         HorizontalDivider(color = Color(0xFF84A0FA))
@@ -143,7 +143,7 @@ fun TaskCard(task: Task) {
                     ) {
 
                         Text(
-                            text = task.type,
+                            text = task.type.toString(),
                             style = MaterialTheme.typography.headlineMedium,
                             color = Color(0xFF2260FF),
                             fontWeight = FontWeight.SemiBold,

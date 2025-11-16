@@ -7,12 +7,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoGraph
+import androidx.compose.material.icons.filled.DataUsage
+import androidx.compose.material.icons.filled.StackedBarChart
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.StackedLineChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.R
-import com.example.assignmenttrack.data.User
+import com.example.assignmenttrack.Model.User
+import com.example.assignmenttrack.Model.defaultUser
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 
 // Profil (bagian atas di dashboard)
 @Composable
-fun ProfileSection(name: String, onClick: () -> Unit) {
+fun ProfileSection(name: String, onProfileClick: () -> Unit, onStatClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +50,8 @@ fun ProfileSection(name: String, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // bagian buat show profile pict
             Row(
@@ -56,7 +65,7 @@ fun ProfileSection(name: String, onClick: () -> Unit) {
                         .padding(all = 8.dp)
                         .clip(shape = CircleShape)
                         .border(width = 1.dp, color = Color.Black, shape = CircleShape),
-                    painter = painterResource(id = User().ProfilePictureId),
+                    painter = painterResource(id = defaultUser.ProfilePictureId),
                     contentDescription = ("User Profile"),
                 )
 
@@ -82,20 +91,46 @@ fun ProfileSection(name: String, onClick: () -> Unit) {
 
 
             // setting button/notif (kgk tau buat apaan pakek aja dlu)
-            IconButton(
-                onClick = onClick,
+            Row(
                 modifier = Modifier
-                    .padding(end = 12.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFCAD6FF))
-                    .align(Alignment.CenterVertically)
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.Black,
+
+                IconButton(
+                    onClick = onStatClick,
                     modifier = Modifier
-                )
+                        .padding(end = 12.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFCAD6FF))
+                        .align(Alignment.CenterVertically)
+                        .height(40.dp)
+                        .width(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DataUsage,
+                        contentDescription = "Show Stat",
+                        tint = Color.DarkGray,
+                    )
+                }
+
+//              Profile Button
+                IconButton(
+                    onClick = onProfileClick,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFCAD6FF))
+                        .align(Alignment.CenterVertically)
+                        .height(40.dp)
+                        .width(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.PersonOutline,
+                        contentDescription = "Settings",
+                        tint = Color.DarkGray,
+                    )
+                }
             }
         }
     }

@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.9.4")
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
 
 
     implementation(libs.navigation.compose)

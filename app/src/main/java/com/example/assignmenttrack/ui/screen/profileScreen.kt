@@ -31,8 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.R
-import com.example.assignmenttrack.data.User
+import com.example.assignmenttrack.Model.defaultUser
 import com.example.assignmenttrack.ui.components.FormField1
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 
@@ -81,8 +80,8 @@ fun ProfileSection(nama: String, onBackClick: () -> Unit){
                         .align(Alignment.CenterHorizontally)
                         .width(150.dp)
                         .height(150.dp)
-                        .clickable { /*TODO: Feture to change profile picture*/},
-                    painter = painterResource(id = User().ProfilePictureId),
+                        .clickable { /*TODO: Feature to change profile picture*/},
+                    painter = painterResource(id = defaultUser.ProfilePictureId),
                     contentDescription = ("User Profile"),
                 )
 
