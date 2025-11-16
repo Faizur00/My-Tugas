@@ -1,5 +1,6 @@
 package com.example.assignmenttrack.ui.components
 
+import android.view.RoundedCorner
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -8,11 +9,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -25,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,11 +65,10 @@ fun Calendar(
         }
     )
 
-
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(top = 4.dp, start = 16.dp, end = 16.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
             .padding(16.dp)
@@ -69,11 +77,10 @@ fun Calendar(
 
         LazyVerticalGrid( // dibagi jadi 7 kolom
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(top = 12.dp),
             columns = GridCells.Fixed(CalendarUtils.CALENDAR_COLUMNS),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(monthData.offset) { index -> // kotak-kotak bulan lalu
                 val day = monthData.previousMonthStartDay + index
@@ -126,40 +133,47 @@ private fun CalendarHeader(
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(top = 6.dp)
     ){
-        IconButton(onClick = onPreviousClick){ // tombol kiri
-            Icon(
-                modifier = Modifier
-                    .size(32.dp),
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                tint = Color(0xFF2260FF),
-                contentDescription = "Previous Month"
-            )
-        }
-
-        Text(
+        Row(
             modifier = Modifier
-                .padding(12.dp),
-            text = "${CalendarUtils.monthNames[month - 1]} $year",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 24.sp,
-            color = Color(0xFF2260FF),
-        )
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            IconButton(onClick = onPreviousClick){ // tombol kiri
+                Icon(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(32.dp),
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    tint = Color(0xFF2260FF),
+                    contentDescription = "Previous Month"
+                )
+            }
 
-        IconButton(onClick = onNextClick){ // tombol kanan
-            Icon(
+            Text(
                 modifier = Modifier
-                    .size(32.dp),
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                tint = Color(0xFF2260FF),
-                contentDescription = "Next Month"
+                    .padding(top= 5.dp),
+                text = "${CalendarUtils.monthNames[month - 1]} $year",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                color = Color(0xFF2260FF),
             )
+
+            IconButton(onClick = onNextClick){ // tombol kanan
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(32.dp),
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    tint = Color(0xFF2260FF),
+                    contentDescription = "Next Month"
+                )
+            }
         }
     }
 }
@@ -171,22 +185,22 @@ private fun CalendarDayHeader(){
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         CalendarUtils.dayNames.forEach { day ->
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(20.dp))
                     .background(Color(0xFF2260FF))
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 2.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = day,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 10.sp
+                    fontSize = 12.sp
                 )
             }
         }
@@ -205,34 +219,40 @@ private fun CalendarDayCells(
 ){
     Box(
         modifier = Modifier
-            .aspectRatio(1f)
-            .then(
-                when{
-                    hasTask -> Modifier
-                        .clip(CircleShape)
-                        .background(Color(0xFF2260FF))
-                    isToday -> Modifier
-                        .clip(CircleShape)
-                        .background(Color(0xFFFFD700))
-                    else -> Modifier
-                }
-            )
+            .fillMaxWidth()
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ){
-        Text(
-            text = day.toString(),
-            color = when {
-                !isCurrentMonth -> Color.LightGray
-                isToday || hasTask -> Color.White
-                else -> Color.Black
-            },
-            fontWeight = when {
-                isToday || hasTask -> FontWeight.Bold
-                else -> FontWeight.Normal
-            },
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center
-        )
+        Box(
+            modifier = Modifier
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(
+                    when {
+                        hasTask -> Color(0xFF2260FF)
+                        isToday -> Color(0xFFFFD700)
+                        else -> Color.Transparent
+                    },
+                ),
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = day.toString(),
+                color = when {
+                    !isCurrentMonth -> Color.LightGray
+                    isToday || hasTask -> Color.White
+                    else -> Color.Black
+                },
+                fontWeight = when {
+                    isToday || hasTask -> FontWeight.Bold
+                    else -> FontWeight.Normal
+                },
+                fontSize = when {
+                    !isCurrentMonth -> 10.sp
+                    else -> 12.sp
+                },
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

@@ -48,7 +48,7 @@ class CalendarViewModel: ViewModel(){
     // Ambil semua tugas yang ada
     fun loadTask(){
         viewModelScope.launch {
-            val tasks = TaskList  /* TODO: Ganti kalau sudah pakai database*/
+            val tasks = TaskList  /* TODO: Ganti semua kalau sudah pakai database*/
             _allTasks.value = tasks
             updateCalendarTasks()
         }

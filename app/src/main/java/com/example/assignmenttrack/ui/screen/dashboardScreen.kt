@@ -85,7 +85,7 @@ fun CalendarScreen(
     ) {
         item {
             Calendar(
-                modifier = Modifier.height(415.dp),
+                modifier = Modifier.height(270.dp),
                 calendarInput = calendarTasks,
                 year = currentYear,
                 month = currentMonth,
@@ -123,15 +123,29 @@ fun CalendarScreen(
             }
         }
 
-        items(
-            items = selectedDateTasks,
-            key = { it.id }
-        ){ task ->
-            TaskCard(task)
-            Spacer(Modifier.height(16.dp))
+        if(selectedDate != null && selectedDateTasks.isEmpty()){
+            item {
+                Text(
+                    text = "There is no task",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray
+                )
+            }
+        }
+        else{
+            items(
+                items = selectedDateTasks,
+                key = { it.id }
+            ){ task ->
+                TaskCard(task)
+                Spacer(Modifier.height(16.dp))
+            }
         }
     }
 }
+
 
 // handle showing list of card task (emg nge lag pas masih debug)
 @Composable
