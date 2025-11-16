@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,12 +20,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.data.TaskList
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.assignmenttrack.data.Task
 import com.example.assignmenttrack.data.User
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
+import com.example.assignmenttrack.viewmodel.CalendarViewModel
+import com.example.assignmenttrack.ui.components.Calendar
+import com.example.assignmenttrack.ui.components.CalendarUtils
 
 @Composable
 fun MainDashboard(
@@ -38,8 +47,13 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
+                ->
                 ProfileSection(name = User().name, onProfileClick)
-                TaskListScreen()
+                CalendarScreen(
+                    modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                )
             }
             GeneralSubmitButton(
                 modifier = Modifier
@@ -54,10 +68,75 @@ fun MainDashboard(
 }
 
 
+// malasku debug ternyata gara2 mutable :X
+@Composable
+fun CalendarScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CalendarViewModel = viewModel()
+) {
+    val currentYear by viewModel.currentYear.collectAsStateWithLifecycle()
+    val currentMonth by viewModel.currentMonth.collectAsStateWithLifecycle()
+    val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
+    val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
+    val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
+
+    LazyColumn(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        item {
+            Calendar(
+                modifier = Modifier.height(415.dp),
+                calendarInput = calendarTasks,
+                year = currentYear,
+                month = currentMonth,
+                onDayClick = { day, month, year ->
+                    viewModel.onDayClick(day, month, year)
+                    viewModel.updateSelectedDateTasks(Triple(day, month, year), calendarTasks)
+                },
+                onMonthChange = { newMonth, newYear ->
+                    viewModel.changeMonth(newMonth, newYear)
+                }
+            )
+        }
+
+        item {
+            selectedDate?.let { (day, month, year) ->
+                Text(
+                    text = "$day ${CalendarUtils.monthNames[month - 1]} $year",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+                    color = Color(0xFF2260FF),
+                    textAlign = TextAlign.Center
+                )
+            } ?: run {
+                Text(
+                    text = "Select a date to view tasks",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray
+                )
+            }
+        }
+
+        items(
+            items = selectedDateTasks,
+            key = { it.id }
+        ){ task ->
+            TaskCard(task)
+            Spacer(Modifier.height(16.dp))
+        }
+    }
+}
+
 // handle showing list of card task (emg nge lag pas masih debug)
 @Composable
-fun TaskListScreen(modifier: Modifier = Modifier) {
-    var taskList by remember { mutableStateOf(TaskList) }
+fun TaskListScreen(modifier: Modifier = Modifier, tasks: List<Task>) {
+    var taskList by remember { mutableStateOf(tasks) }
 
     LazyColumn(
         modifier = modifier.padding(horizontal = 16.dp),
@@ -67,6 +146,7 @@ fun TaskListScreen(modifier: Modifier = Modifier) {
             TaskCard(task)
             Spacer(Modifier.height(16.dp))
         }
-
     }
 }
+
+
