@@ -26,20 +26,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.assignmenttrack.data.Task
-import com.example.assignmenttrack.data.User
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.viewmodel.CalendarViewModel
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.CalendarUtils
+import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.Model.defaultUser
 
 @Composable
 fun MainDashboard(
     modifier: Modifier = Modifier,
     onAddTaskClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {}
+    onProfileClick: () -> Unit = {},
+    onStatClick: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -48,7 +49,7 @@ fun MainDashboard(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ->
-                ProfileSection(name = User().name, onProfileClick)
+                ProfileSection(name = defaultUser.name, onStatClick = onStatClick, onProfileClick = onProfileClick) // ganti mi kalau sudah ku isi2 ji
                 CalendarScreen(
                     modifier = Modifier
                     .fillMaxWidth()
@@ -68,7 +69,7 @@ fun MainDashboard(
 }
 
 
-// malasku debug ternyata gara2 mutable :X
+// malas ngedebug
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
@@ -137,8 +138,8 @@ fun CalendarScreen(
         else{
             items(
                 items = selectedDateTasks,
-                key = { it.id }
-            ){ task ->
+                key = { task -> task.id }
+            ) { task ->
                 TaskCard(task)
                 Spacer(Modifier.height(16.dp))
             }

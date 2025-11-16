@@ -1,4 +1,4 @@
-package com.example.assignmenttrack.data
+package com.example.assignmenttrack.Model
 
 data class CalendarTask(
     val day:Int,
