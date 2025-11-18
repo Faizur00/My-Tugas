@@ -13,6 +13,7 @@ import com.example.assignmenttrack.Model.User
 import com.example.assignmenttrack.Model.defaultUser
 import com.example.assignmenttrack.ui.screen.MainDashboard
 import com.example.assignmenttrack.ui.screen.AddTaskScreen
+import com.example.assignmenttrack.ui.screen.CalendarRoute
 import com.example.assignmenttrack.ui.screen.ProfileSection
 import com.example.assignmenttrack.ui.screen.StatScreen
 
@@ -22,6 +23,8 @@ sealed class Screen(val route: String) {
     data object AddTask : Screen("add_task")
     data object Profile : Screen("profile")
     data object Stat : Screen("stat")
+
+    data object Calendar : Screen("Calendar")
 
 }
 
@@ -43,7 +46,8 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
             MainDashboard(
                 onAddTaskClick = { navController.navigate(Screen.AddTask.route) },
                 onProfileClick = { navController.navigate(Screen.Profile.route) },
-                onStatClick = { navController.navigate(Screen.Stat.route) }
+                onStatClick = { navController.navigate(Screen.Stat.route) },
+                onCalendarClick = { navController.navigate(Screen.Calendar.route) }
             )
         }
 
@@ -63,6 +67,12 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
         composable(Screen.Stat.route){
             StatScreen(
                 /*TODO: Create Pop BAck*/
+            )
+        }
+
+        composable (Screen.Calendar.route){
+            CalendarRoute(
+                /*TODO : Create Pop Back*/
             )
         }
     }

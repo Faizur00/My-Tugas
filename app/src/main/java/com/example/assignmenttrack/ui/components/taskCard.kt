@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -46,7 +45,7 @@ import java.time.format.DateTimeFormatter
 
 // single card task
 @Composable
-fun TaskCard(task: Task) {
+fun TaskCard(task: Task, modifier: Modifier) {
     val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a")
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }

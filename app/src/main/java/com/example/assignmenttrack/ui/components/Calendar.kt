@@ -4,14 +4,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -41,74 +45,83 @@ fun Calendar(
     ) {
 
     val monthData = CalendarUtils.calculateMonthData(year, month)
-
-    CalendarHeader(
-        year = year,
-        month = month,
-        onPreviousClick = {
-            val (newMonth, newYear) = CalendarUtils.getPreviousMonth(month, year)
-            onMonthChange(newMonth, newYear)
-        },
-        onNextClick = {
-            val (newMonth, newYear) = CalendarUtils.getNextMonth(month, year)
-            onMonthChange(newMonth, newYear)
-        }
+    Box(
+        modifier = Modifier
+//            .padding(start = 8.dp, end = 8.dp)
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(color = Color.White)
+            .wrapContentSize(),
     )
+    {
+        Column (modifier = Modifier.padding(bottom = 24.dp)){
+            CalendarHeader(
+                year = year,
+                month = month,
+                onPreviousClick = {
+                    val (newMonth, newYear) = CalendarUtils.getPreviousMonth(month, year)
+                    onMonthChange(newMonth, newYear)
+                },
+                onNextClick = {
+                    val (newMonth, newYear) = CalendarUtils.getNextMonth(month, year)
+                    onMonthChange(newMonth, newYear)
+                }
+            )
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color(0xFFCAD6FF))
+                    .padding(16.dp)
+            ) {
+                CalendarDayHeader()
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 4.dp, start = 16.dp, end = 16.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        CalendarDayHeader()
+                LazyVerticalGrid( // dibagi jadi 7 kolom
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    columns = GridCells.Fixed(CalendarUtils.CALENDAR_COLUMNS),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(monthData.offset) { index -> // kotak-kotak bulan lalu
+                        val day = monthData.previousMonthStartDay + index
+                        val (prevMonth, prevYear) = CalendarUtils.getPreviousMonth(month, year)
+                        CalendarDayCells(
+                            day = day,
+                            isCurrentMonth = false,
+                            hasTask = false,
+                            isToday = false,
+                            onClick = { onDayClick(day, prevMonth, prevYear) }
+                        )
+                    }
 
-        LazyVerticalGrid( // dibagi jadi 7 kolom
-            modifier = Modifier
-                .padding(top = 12.dp),
-            columns = GridCells.Fixed(CalendarUtils.CALENDAR_COLUMNS),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            items(monthData.offset) { index -> // kotak-kotak bulan lalu
-                val day = monthData.previousMonthStartDay + index
-                val (prevMonth, prevYear) = CalendarUtils.getPreviousMonth(month, year)
-                CalendarDayCells(
-                    day = day,
-                    isCurrentMonth = false,
-                    hasTask = false,
-                    isToday = false,
-                    onClick = { onDayClick(day, prevMonth, prevYear) }
-                )
-            }
+                    items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
+                        val day = index + 1
+                        val task = calendarInput.find { it.day == day }
+                        val hasTask = task?.task?.any { !it.status } ?: false
+                        val isToday = CalendarUtils.isToday(day, month, year)
+                        CalendarDayCells(
+                            day = day,
+                            isCurrentMonth = true,
+                            hasTask = hasTask,
+                            isToday = isToday,
+                            onClick = { onDayClick(day, month, year) }
+                        )
+                    }
 
-            items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
-                val day = index + 1
-                val task = calendarInput.find { it.day == day }
-                val hasTask = task?.task?.any { !it.status } ?: false
-                val isToday = CalendarUtils.isToday(day, month, year)
-                CalendarDayCells(
-                    day = day,
-                    isCurrentMonth = true,
-                    hasTask = hasTask,
-                    isToday = isToday,
-                    onClick = { onDayClick(day, month, year) }
-                )
-            }
+                    items(monthData.remainingCells) { index -> // kotak-kotak bulan depan
+                        val day = index + 1
+                        val (nextMonth, nextYear) = CalendarUtils.getNextMonth(month, year)
 
-            items(monthData.remainingCells) { index -> // kotak-kotak bulan depan
-                val day = index + 1
-                val (nextMonth, nextYear) = CalendarUtils.getNextMonth(month, year)
-
-                CalendarDayCells(
-                    day = day,
-                    isCurrentMonth = false,
-                    hasTask = false,
-                    isToday = false,
-                    onClick = { onDayClick(day, nextMonth, nextYear) }
-                )
+                        CalendarDayCells(
+                            day = day,
+                            isCurrentMonth = false,
+                            hasTask = false,
+                            isToday = false,
+                            onClick = { onDayClick(day, nextMonth, nextYear) }
+                        )
+                    }
+                }
             }
         }
     }
@@ -131,16 +144,16 @@ private fun CalendarHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             IconButton(onClick = onPreviousClick){ // tombol kiri
                 Icon(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .size(32.dp),
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    tint = Color(0xFF2260FF),
+                    tint = Color.Black,
                     contentDescription = "Previous Month"
                 )
             }
@@ -151,7 +164,7 @@ private fun CalendarHeader(
                 text = "${CalendarUtils.monthNames[month - 1]} $year",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
-                color = Color(0xFF2260FF),
+                color = Color.Black,
             )
 
             IconButton(onClick = onNextClick){ // tombol kanan
@@ -160,7 +173,7 @@ private fun CalendarHeader(
                         .padding(end = 16.dp)
                         .size(32.dp),
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    tint = Color(0xFF2260FF),
+                    tint = Color.Black,
                     contentDescription = "Next Month"
                 )
             }
@@ -220,17 +233,26 @@ private fun CalendarDayCells(
                 .background(
                     when {
                         hasTask -> Color(0xFF2260FF)
-                        isToday -> Color(0xFFFFD700)
+                        isToday -> Color.White
                         else -> Color.Transparent
                     },
+                )
+                .border(
+                    color = when {
+                        isToday -> Color(0xFF2260FF)
+                        else -> Color.Transparent
+                    },
+                    width = 1.25.dp,
+                    shape = CircleShape
                 ),
             contentAlignment = Alignment.Center
         ){
             Text(
                 text = day.toString(),
                 color = when {
-                    !isCurrentMonth -> Color.LightGray
-                    isToday || hasTask -> Color.White
+                    !isCurrentMonth -> Color.DarkGray
+                    isToday -> Color(0xFF2260FF)
+                    hasTask -> Color.White
                     else -> Color.Black
                 },
                 fontWeight = when {

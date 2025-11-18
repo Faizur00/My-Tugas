@@ -63,5 +63,14 @@ val TaskList = listOf(
         // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
         deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 21)
     ),
+    Task(
+        id = "5",
+        type = TaskType.Tugas,
+        title = "tamatkan silsong",
+        description = "Defeat dewa lastboss",
+        status = false,
+        // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
+        deadline = createInstant(2025, Month.NOVEMBER, 15, 9, 21)
+    ),
 )
 

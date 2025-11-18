@@ -7,20 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoGraph
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.StackedBarChart
-import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.PersonOutline
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.StackedLineChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,13 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.User
 import com.example.assignmenttrack.Model.defaultUser
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 
 // Profil (bagian atas di dashboard)
 @Composable
-fun ProfileSection(name: String, onProfileClick: () -> Unit, onStatClick: () -> Unit) {
+fun ProfileSection(name: String, onProfileClick: () -> Unit, onStatClick: () -> Unit, onCalendarClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,6 +90,23 @@ fun ProfileSection(name: String, onProfileClick: () -> Unit, onStatClick: () -> 
                     .padding(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                IconButton(
+                    onClick = onCalendarClick,
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFCAD6FF))
+                        .align(Alignment.CenterVertically)
+                        .height(40.dp)
+                        .width(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "Show Calendar",
+                        tint = Color.DarkGray,
+                    )
+                }
 
                 IconButton(
                     onClick = onStatClick,

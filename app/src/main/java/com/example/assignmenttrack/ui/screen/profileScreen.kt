@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,12 @@ import com.example.assignmenttrack.ui.theme.leagueSpartan
 
 @Composable
 fun ProfileSection(nama: String, onBackClick: () -> Unit){
-    Surface(color = Color.White) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize(),
+        color = Color.White
+        Alignment = TopCenter
+    ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
@@ -129,7 +135,6 @@ fun ProfileSection(nama: String, onBackClick: () -> Unit){
                     onValueChange = { gktau2 = it },
                     titleFontWeight = FontWeight.Medium
                 )
-
             }
         }
     }
