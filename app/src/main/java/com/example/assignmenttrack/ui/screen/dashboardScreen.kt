@@ -68,7 +68,7 @@ fun TaskListScreen(
         contentPadding = PaddingValues(top = 8.dp, bottom = 128.dp)
     ){
         items(items = taskUiState.tasks, key = { task -> task.id }) { task ->
-            TaskCard(task, modifier = Modifier)
+            TaskCard(task, modifier = Modifier, taskViewModel)
             Spacer(Modifier.height(16.dp))
         }
     }

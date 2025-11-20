@@ -40,12 +40,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.Model.Task
 import com.example.assignmenttrack.ui.theme.leagueSpartan
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 // single card task
 @Composable
-fun TaskCard(task: Task, modifier: Modifier) {
+fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel) {
     val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a")
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }
@@ -117,7 +118,7 @@ fun TaskCard(task: Task, modifier: Modifier) {
 
                         DropdownMenuItem(
                             text = { Text("Delete", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle delete */ },
+                            onClick = { taskListViewModel.deleteTask(task) },
                             leadingIcon = {Icon(imageVector = Icons.Default.Delete, tint = Color(0xFF456DEE), contentDescription = "Delete")}
                         )
                     }

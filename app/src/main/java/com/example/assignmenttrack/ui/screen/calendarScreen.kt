@@ -33,6 +33,7 @@ import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.CalendarViewModel
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 @Composable
 fun CalendarRoute(){
@@ -100,9 +101,12 @@ fun CalendarScreen(
                         selectedDateTasks = selectedDateTasks
                     )
 
+                    val taskListViewModel: TaskListViewModel = viewModel()
+
                     TaskList(
                         modifier = Modifier,
-                        tasks = selectedDateTasks
+                        tasks = selectedDateTasks,
+                        taskListViewModel = taskListViewModel
                     )
 
                     Box(
@@ -151,14 +155,14 @@ fun CalendarScreenHeader(){
 }
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
+fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel: TaskListViewModel) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth())
+            TaskCard(task, modifier = Modifier.fillMaxWidth(), taskListViewModel =  taskListViewModel)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
