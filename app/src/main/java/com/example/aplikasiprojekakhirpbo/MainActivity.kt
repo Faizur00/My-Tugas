@@ -28,7 +28,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}// test comment
+}
+
+// test comment halo halo halo bandung
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
