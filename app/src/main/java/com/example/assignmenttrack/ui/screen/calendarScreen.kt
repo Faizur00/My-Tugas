@@ -137,7 +137,8 @@ fun CalendarScreenHeader(){
     Column(
         modifier = Modifier
             .background(Color.White)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(

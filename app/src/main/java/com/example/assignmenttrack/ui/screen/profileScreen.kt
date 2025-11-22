@@ -40,7 +40,8 @@ import com.example.assignmenttrack.ui.theme.leagueSpartan
 fun ProfileSection(nama: String, onBackClick: () -> Unit){
     Surface(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .padding(top = 16.dp),
         color = Color.White
     ){
         Column(
