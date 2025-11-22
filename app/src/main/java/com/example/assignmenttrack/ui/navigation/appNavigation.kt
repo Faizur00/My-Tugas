@@ -5,7 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,14 +26,13 @@ sealed class Screen(val route: String) {
     data object Stat : Screen("stat")
 
     data object Calendar : Screen("Calendar")
-
 }
 
 
 // host the navigation graph and define the different screen.
 @Composable
-fun AppNavigation(navController: NavHostController = rememberNavController() ) {
-    val taskListViewModel: TaskListViewModel = viewModel()
+fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel) {
+    val taskListViewModel: TaskListViewModel = hiltViewModel()
     NavHost(
         navController = navController,
         enterTransition = {

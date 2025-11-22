@@ -1,7 +1,7 @@
-package com.example.assignmenttrack.Data
+package com.example.assignmenttrack.data
 
-import com.example.assignmenttrack.Model.Task
-import com.example.assignmenttrack.Model.createInstant
+import com.example.assignmenttrack.model.Task
+import com.example.assignmenttrack.model.createInstant
 import kotlinx.serialization.Serializable
 import java.time.Month
 

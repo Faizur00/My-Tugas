@@ -1,6 +1,6 @@
 package com.example.assignmenttrack.uiStateData
 
-import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.model.Task
 
 data class CalendarTask(
     val day:Int,

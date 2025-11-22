@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -64,8 +66,12 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.9.4")
     implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("androidx.room:room-ktx:2.8.4")
 
-
+    ksp("androidx.room:room-compiler:2.8.4")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.57.1")
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")

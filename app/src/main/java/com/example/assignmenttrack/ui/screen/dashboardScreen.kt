@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,12 +63,12 @@ fun TaskListScreen(
     taskViewModel: TaskListViewModel,
     modifier: Modifier = Modifier
 ) {
-    val taskUiState: TaskListUiState by taskViewModel.taskState.collectAsStateWithLifecycle()
+    val tasks by taskViewModel.tasks.collectAsState(initial = emptyList())
     LazyColumn(
         modifier = modifier.padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 8.dp, bottom = 128.dp)
     ){
-        items(items = taskUiState.tasks, key = { task -> task.id }) { task ->
+        items(items = tasks, key = { task -> task.id }) { task ->
             TaskCard(task, modifier = Modifier, taskViewModel)
             Spacer(Modifier.height(16.dp))
         }

@@ -1,54 +1,38 @@
 package com.example.assignmenttrack.viewModel
 
 import androidx.lifecycle.ViewModel
-import com.example.assignmenttrack.Data.TaskList
-import com.example.assignmenttrack.Model.Task
-import com.example.assignmenttrack.uiStateData.TaskListUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.lifecycle.viewModelScope
+import com.example.assignmenttrack.database.TaskRepository
+import com.example.assignmenttrack.model.Task
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TaskListViewModel: ViewModel(){
-//    mutable backing property for tasklist
-    private val _taskState = MutableStateFlow(TaskListUiState())
-//    Backing Property for tasklist (buat exposed immutable data ke UI)
-    val taskState: StateFlow<TaskListUiState> = _taskState.asStateFlow()
+@HiltViewModel
+class TaskListViewModel @Inject constructor(private val repository: TaskRepository) : ViewModel(){
 
-    init {
-        loadTasks()
-    }
+    // Expose tasks dari repository
+    val tasks: Flow<List<Task>> = repository.getAllTasks()
 
-    private fun loadTasks() {
-        _taskState.update {
-            it.copy(tasks = TaskList)
-        }
-    }
-
+    // Tambah task
     fun addTask(task: Task) {
-        _taskState.update { current ->
-            current.copy(tasks = current.tasks + task)
+        viewModelScope.launch {
+            repository.insertTask(task)
         }
     }
 
-    fun deleteTask(task: Task) {
-        _taskState.update { current ->
-            current.copy(tasks = current.tasks.filterNot { it.id == task.id })
+    // Hapus task
+    fun deleteTask(taskId: Int) {
+        viewModelScope.launch {
+            repository.deleteTask(taskId)
         }
     }
 
-    fun setTaskStatus(task: Task) {
-        _taskState.update { current ->
-            current.copy(
-                tasks = current.tasks.map {
-                    if (it.id == task.id) it.copy(status = !it.status) else it
-                }
-            )
+    // Tandai task selesai
+    fun completeTask(taskId: Int) {
+        viewModelScope.launch {
+            repository.completeTask(taskId)
         }
-    }
-
-    fun completeTask(task: Task) {
-        deleteTask(task)
-        setTaskStatus(task)
     }
 }

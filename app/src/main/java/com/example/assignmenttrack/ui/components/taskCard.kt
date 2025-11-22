@@ -38,7 +38,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.Task
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.ZoneId
@@ -46,7 +47,7 @@ import java.time.format.DateTimeFormatter
 
 // single card task
 @Composable
-fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel) {
+fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel = hiltViewModel()) {
     val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a")
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }
@@ -110,7 +111,7 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
 
                         DropdownMenuItem(
                             text = { Text("Complete", color = Color(0xFF728FFC)) },
-                            onClick = { taskListViewModel.completeTask(task) },
+                            onClick = { taskListViewModel.completeTask(task.id) },
                             leadingIcon = {Icon(imageVector = Icons.Default.CheckCircle, tint = Color(0xFF456DEE), contentDescription = "Complete")}
                         )
 
@@ -118,7 +119,7 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
 
                         DropdownMenuItem(
                             text = { Text("Delete", color = Color(0xFF728FFC)) },
-                            onClick = { taskListViewModel.deleteTask(task) },
+                            onClick = { taskListViewModel.deleteTask(task.id) },
                             leadingIcon = {Icon(imageVector = Icons.Default.Delete, tint = Color(0xFF456DEE), contentDescription = "Delete")}
                         )
                     }

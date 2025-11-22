@@ -90,7 +90,12 @@ fun Calendar(
                 items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
                     val day = index + 1
                     val tasks = calendarInput.find { it.day == day }
-                    val hasTask = tasks?.tasks?.any { !it.status } ?: false
+                    val hasTask = tasks?.tasks?.any { task ->
+                        when (task.status) {
+                            true -> false
+                            false, null -> true
+                        }
+                    } ?: false
                     val isToday = CalendarUtils.isToday(day, month, year)
                     CalendarDayCells(
                         day = day,

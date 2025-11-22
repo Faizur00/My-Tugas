@@ -1,19 +1,21 @@
-package com.example.assignmenttrack.Model
+package com.example.assignmenttrack.model
 
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
 
-
+@Entity(tableName = "Tasks")
 data class Task(
-    val id: Int,
-    val type: TaskType,
-    val title: String,
-    val description: String,
-    val deadline: Instant,
-    val status: Boolean,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    var type: TaskType,
+    var title: String,
+    var description: String,
+    var deadline: Instant,
+    var status: Boolean? = null
 ) {
     enum class TaskType {
         Tugas,

@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.Instant
 import java.time.LocalDateTime
@@ -122,11 +122,10 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
                 text = "Tambah Tugas",
                 onClick = {
                     val newTask = Task(
-                        id = generateNewId(),
                         type = assignmentType,
                         title = assignmentTitle,
                         description = assignmentDescription,
-                        status = false,
+                        status = null,
                         deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
                     )
                     taskListViewModel.addTask(newTask)
@@ -269,6 +268,6 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
     }
 }
 
-private fun generateNewId(): Int {
-    return (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
-}
+//private fun generateNewId(): Int {
+//    return (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
+//}

@@ -26,14 +26,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.CalendarViewModel
 import com.example.assignmenttrack.viewModel.TaskListViewModel
+import java.time.LocalDate
 
 @Composable
 fun CalendarRoute(){
@@ -53,39 +55,39 @@ fun CalendarRoute(){
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel = viewModel()
+    viewModel: CalendarViewModel = hiltViewModel()
 ) {
-    val currentYear by viewModel.currentYear.collectAsStateWithLifecycle()
-    val currentMonth by viewModel.currentMonth.collectAsStateWithLifecycle()
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
     val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
+    val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
     val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
+    val taskListViewModel: TaskListViewModel = hiltViewModel()
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = Color(0xFFCAD6FF)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 CalendarScreenHeader()
-
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Calendar component
                 Calendar(
                     modifier = Modifier
                         .height(275.dp)
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.CenterHorizontally),
                     calendarInput = calendarTasks,
-                    year = currentYear,
-                    month = currentMonth,
+                    year = selectedDate?.year ?: LocalDate.now().year,
+                    month = selectedDate?.monthValue ?: LocalDate.now().monthValue,
                     onDayClick = { day, month, year ->
-                        viewModel.onDayClick(day, month, year)
-                        viewModel.loadSelectedDateTasks(Triple(day, month, year), calendarTasks)
+                        val date = LocalDate.of(year, month, day)
+                        viewModel.setSelectedDate(date)
                     },
                     onMonthChange = { newMonth, newYear ->
-                        viewModel.changeMonth(newMonth, newYear)
+                        val date = selectedDate ?: LocalDate.now()
+                        viewModel.setSelectedDate(LocalDate.of(newYear, newMonth, date.dayOfMonth))
                     }
                 )
 
@@ -94,21 +96,22 @@ fun CalendarScreen(
                         .weight(1f)
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
-                ){
+                ) {
+                    // Pesan jika tidak ada task atau tanggal belum dipilih
                     DateText(
                         modifier = Modifier,
-                        selectedDate = selectedDate,
+                        selectedDate = selectedDateTriple,
                         selectedDateTasks = selectedDateTasks
                     )
 
-                    val taskListViewModel: TaskListViewModel = viewModel()
-
+                    val taskListViewModel: TaskListViewModel = viewModel() // kalau mau interaksi dengan TaskListViewModel
                     TaskList(
                         modifier = Modifier,
                         tasks = selectedDateTasks,
                         taskListViewModel = taskListViewModel
                     )
 
+                    // Gradien atas
                     Box(
                         modifier = Modifier
                             .height(24.dp)

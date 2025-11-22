@@ -1,4 +1,4 @@
-package com.example.assignmenttrack.Model
+package com.example.assignmenttrack.model
 
 import kotlinx.serialization.Serializable
 
