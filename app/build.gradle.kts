@@ -75,4 +75,5 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    implementation("androidx.core:core-splashscreen:1.2.0")
 }
