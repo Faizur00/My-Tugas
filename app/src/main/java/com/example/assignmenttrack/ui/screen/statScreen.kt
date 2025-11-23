@@ -13,6 +13,8 @@ import androidx.compose.material3.Surface
 import com.example.assignmenttrack.ui.components.StatCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -24,13 +26,18 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.theme.leagueSpartan
+import com.example.assignmenttrack.viewModel.UserViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun StatScreen(){
+fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
+    val user by viewModel.user.collectAsStateWithLifecycle()
+
     Surface(color = Color(0xFFCAD6FF)){
         Box(
             modifier = Modifier
@@ -60,7 +67,7 @@ fun StatScreen(){
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Total Aktivitas: \n ${defaultUser.taskTotal}",
+                        text = "Total Aktivitas: \n ${user.taskTotal}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -86,9 +93,9 @@ fun StatScreen(){
 //                      Magic Slices
                         val slices = listOf(
 
-                            Slice(defaultUser.taskCompleted.toFloat(), Color(0xFF64B5F6),"Completed"),
-                            Slice(defaultUser.taskLate.toFloat(), Color(0xFFF06292),"Late"),
-                            Slice(defaultUser.taskPending.toFloat(), Color(0xFF81C784),"OnGoing"),
+                            Slice(user.taskCompleted.toFloat(), Color(0xFF64B5F6),"Completed"),
+                            Slice(user.taskLate.toFloat(), Color(0xFFF06292),"Late"),
+                            Slice(user.taskPending.toFloat(), Color(0xFF81C784),"OnGoing"),
                         )
 
 
@@ -153,8 +160,8 @@ fun StatScreen(){
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    val completedTasks = defaultUser.taskCompleted
-                    val lateTasks = defaultUser.taskLate
+                    val completedTasks = user.taskCompleted
+                    val lateTasks = user.taskLate
                     val totalCompleted = completedTasks + lateTasks
                     val onTimePercentage = if (totalCompleted > 0) {
                         (completedTasks.toFloat() / totalCompleted.toFloat() * 100).toInt()
@@ -162,9 +169,9 @@ fun StatScreen(){
                         0
                     }
 
-                    val TotalBelajar = defaultUser.belajarTotal
-                    val TotalTugas = defaultUser.tugasTotal
-                    val TotalKerja = defaultUser.kerjaTotal
+                    val TotalBelajar = user.belajarTotal
+                    val TotalTugas = user.tugasTotal
+                    val TotalKerja = user.kerjaTotal
 
 
                     StatCard(

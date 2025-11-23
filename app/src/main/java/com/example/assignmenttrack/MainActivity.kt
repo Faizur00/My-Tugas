@@ -11,7 +11,7 @@ import com.example.assignmenttrack.ui.theme.AssignmentTrackTheme
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+@AndroidEntryPoint // Module dipakai mulai bisa dipakai mulai dari sini
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -12,13 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.ui.components.TaskForm
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 
 @Composable
-fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel) {
+fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel = hiltViewModel()) {
     Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(
             modifier = Modifier

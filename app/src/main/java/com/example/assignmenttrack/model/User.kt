@@ -1,9 +1,11 @@
 package com.example.assignmenttrack.model
 
-import kotlinx.serialization.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Serializable
+@Entity(tableName = "User")
 data class User(
+    @PrimaryKey var id: Int = 1,
     var name: String,
     var profilePictureId: Int,
     var taskCompleted: Int,

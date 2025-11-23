@@ -27,7 +27,7 @@ class CalendarViewModel @Inject constructor(private val repository: TaskReposito
 
     // Ambil semua task dari repository
     private val allTasks: StateFlow<List<Task>> = repository.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val selectedDateTriple: StateFlow<Triple<Int, Int, Int>?> =
         selectedDate.map { date ->

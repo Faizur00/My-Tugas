@@ -249,8 +249,8 @@ private fun CalendarDayCells(
                 text = day.toString(),
                 color = when {
                     !isCurrentMonth -> Color.LightGray
-                    isToday -> Color(0xFF2260FF)
                     hasTask -> Color.White
+                    isToday -> Color(0xFF2260FF)
                     else -> Color.Black
                 },
                 fontWeight = when {

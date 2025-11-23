@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM Tasks ORDER BY deadline DESC")
+    @Query("SELECT * FROM Tasks ORDER BY deadline ASC")
     fun getAllTasks(): Flow<List<Task>>
 
     @Query("UPDATE Tasks SET status = 1 WHERE id = :taskId")
@@ -22,7 +22,6 @@ interface TaskDao {
     @Query("DELETE FROM TASKS WHERE id = :taskId ")
     suspend fun deleteTask(taskId: Int)
 
-//    @Query()
+//    @Query() Untuk Filter Task
 //    fun getTaskByMonthYear()
-
 }
