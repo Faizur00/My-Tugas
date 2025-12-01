@@ -52,10 +52,19 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }
 
+    val hintColor : Color =  if (task.status == true) {
+        Color(0xFF2260FF)
+    } else if (task.status == false) {
+        Color(0xFFF06292)
+    } else {
+        Color.Transparent
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp)),
+            .clip(RoundedCornerShape(20.dp))
+            .border(3.dp, hintColor, RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {

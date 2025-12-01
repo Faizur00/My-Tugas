@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.example.assignmenttrack.ui.components.StatCard
@@ -34,7 +38,7 @@ import com.example.assignmenttrack.viewModel.UserViewModel
 import kotlin.math.abs
 
 @Composable
-fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
+fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
 
     val stat by viewModel.stat.collectAsStateWithLifecycle()
 
@@ -48,9 +52,9 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
     val totalKerja = stat.kerjaTotal
 
 
-    val onTimePercentage = if (totalTask>= 0)
+    val onTimePercentage = if (completedTasks + lateTasks > 0)
     {
-        (completedTasks.toFloat() / totalTask.toFloat() * 100).toInt()
+        (completedTasks.toFloat() / (completedTasks + lateTasks).toFloat() * 100).toInt()
     }
     else
     {
@@ -99,6 +103,19 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ){
+            IconButton(
+                onClick = {onBackClick()},
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding( top = 24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                    contentDescription = "Balik",
+                    tint = Color(0xFF2260FF)
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -122,7 +139,7 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Total Aktivitas: \n ${stat.taskTotal}",
+                        text = "Aktivitas: \n ${stat.taskTotal}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -147,9 +164,9 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
 
 //                      Magic Slices with animation
                         val slices = listOf(
-                            Slice(completedTasks.toFloat(), Color(0xFF6489F6),"Completed"),
+                            Slice(completedTasks.toFloat(), Color(0xFF81C784),"Completed"),
                             Slice(lateTasks.toFloat(), Color(0xFFF06292),"Late"),
-                            Slice(totalTask - completedTasks - lateTasks.toFloat(), Color(0xFF81C784),"OnGoing"),
+                            Slice(totalTask - completedTasks - lateTasks.toFloat(), Color(0xFF6489F6),"OnGoing"),
                         )
 
 

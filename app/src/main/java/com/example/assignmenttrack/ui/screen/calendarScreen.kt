@@ -14,6 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,7 +42,7 @@ import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.LocalDate
 
 @Composable
-fun CalendarRoute(){
+fun CalendarRoute(onBackClick: () -> Unit){
     Surface(
         color = Color(0xFFCAD6FF),
         modifier = Modifier
@@ -46,7 +50,8 @@ fun CalendarRoute(){
     ) {
         CalendarScreen(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            onBackClick = onBackClick
         )
     }
 }
@@ -55,7 +60,8 @@ fun CalendarRoute(){
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel = hiltViewModel()
+    viewModel: CalendarViewModel = hiltViewModel(),
+    onBackClick: () -> Unit
 ) {
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
     val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
@@ -70,7 +76,7 @@ fun CalendarScreen(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                CalendarScreenHeader()
+                CalendarScreenHeader(onBackClick = onBackClick)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Calendar component
@@ -135,7 +141,7 @@ fun CalendarScreen(
 }
 
 @Composable
-fun CalendarScreenHeader(){
+fun CalendarScreenHeader(onBackClick: () -> Unit){
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -144,13 +150,21 @@ fun CalendarScreenHeader(){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier
-                .padding(top = 32.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(onClick = onBackClick) {
+                 Icon(
+                     imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                     contentDescription = "Balik",
+                     tint = Color(0xFF2260FF)
+                 )
+             }
+
             Text(
                 text = "My Kalender",
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = leagueSpartan,

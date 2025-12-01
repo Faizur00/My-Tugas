@@ -67,14 +67,12 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel
         }
 
         composable(Screen.Stat.route){
-            StatScreen(
-                /*TODO: Create Pop BAck*/
-            )
+            StatScreen(onBackClick = {navController.popBackStack()} )
         }
 
         composable (Screen.Calendar.route){
             CalendarRoute(
-                /*TODO : Create Pop Back*/
+                onBackClick = {navController.popBackStack()}
             )
         }
     }
