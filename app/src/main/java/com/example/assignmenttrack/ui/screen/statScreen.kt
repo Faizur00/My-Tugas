@@ -38,20 +38,19 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
 
     val stat by viewModel.stat.collectAsStateWithLifecycle()
 
-    //    Still Using Dummy Data for now, ntar kalau dah bagus view modelnya ganti ae
-    val completedTasks = 20
-    val lateTasks = 32
-    val totalTaskDone = completedTasks + lateTasks
+    val totalTask = stat.taskTotal
+    val completedTasks = stat.taskCompleted
+    val lateTasks = stat.taskLate
 
 
-    val totalBelajar = 11
-    val totalTugas = 8
-    val totalKerja = 13
+    val totalBelajar = stat.belajarTotal
+    val totalTugas = stat.tugasTotal
+    val totalKerja = stat.kerjaTotal
 
 
-    val onTimePercentage = if (totalTaskDone >= 0)
+    val onTimePercentage = if (totalTask>= 0)
     {
-        (completedTasks.toFloat() / totalTaskDone.toFloat() * 100).toInt()
+        (completedTasks.toFloat() / totalTask.toFloat() * 100).toInt()
     }
     else
     {
@@ -150,7 +149,7 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel()){
                         val slices = listOf(
                             Slice(completedTasks.toFloat(), Color(0xFF6489F6),"Completed"),
                             Slice(lateTasks.toFloat(), Color(0xFFF06292),"Late"),
-                            Slice(abs(completedTasks - lateTasks).toFloat(), Color(0xFF81C784),"OnGoing"),
+                            Slice(totalTask - completedTasks - lateTasks.toFloat(), Color(0xFF81C784),"OnGoing"),
                         )
 
 

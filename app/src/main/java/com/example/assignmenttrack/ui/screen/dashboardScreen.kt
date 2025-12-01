@@ -68,7 +68,8 @@ fun TaskListScreen(
         modifier = modifier.padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 8.dp, bottom = 128.dp)
     ){
-        items(items = tasks, key = { task -> task.id }) { task ->
+        val filteredTasks = tasks.filter { it.status == false || it.status == null }
+        items(items = filteredTasks, key = { task -> task.id }) { task ->
             TaskCard(task, modifier = Modifier, taskViewModel)
             Spacer(Modifier.height(16.dp))
         }
