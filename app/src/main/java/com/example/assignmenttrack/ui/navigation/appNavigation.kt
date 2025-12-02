@@ -9,8 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.screen.MainDashboard
 import com.example.assignmenttrack.ui.screen.AddTaskScreen
 import com.example.assignmenttrack.ui.screen.CalendarRoute
