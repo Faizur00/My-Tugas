@@ -5,8 +5,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -40,6 +44,26 @@ sealed class Screen(val route: String) {
 @Composable
 fun AppNavigation(navController: NavHostController) {
     val taskListViewModel: TaskListViewModel = hiltViewModel()
+
+    // Navigation throttling state - prevents multiple rapid clicks
+    var isNavigating by remember { mutableStateOf(false) }
+
+    // Safe navigation wrapper that blocks duplicate navigation attempts
+    val safeNavigate: (String) -> Unit = { route ->
+        if (!isNavigating) {
+            isNavigating = true
+            navController.navigate(route) {
+                launchSingleTop = true // Prevent duplicate destinations
+            }
+        }
+    }
+
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect {
+            isNavigating = false // Re-enable navigation
+        }
+    }
+
     NavHost(
         navController = navController,
         enterTransition = {
@@ -50,42 +74,39 @@ fun AppNavigation(navController: NavHostController) {
         exitTransition = { fadeOut() },
         startDestination = Screen.Dashboard.route
     ) {
-        composable( Screen.Dashboard.route){
+        composable(Screen.Dashboard.route){
             MainDashboard(
-                onAddTaskClick = { navController.navigate(Screen.AddTask.route) },
-                onProfileClick = { navController.navigate(Screen.Profile.route) },
-                onStatClick = { navController.navigate(Screen.Stat.route) },
-                onCalendarClick = { navController.navigate(Screen.Calendar.route) },
-                onEditClick = { task -> navController.navigate(Screen.EditTask.createRoute(task.id)) },
+                // Replace all direct navController.navigate() calls
+                onAddTaskClick = { safeNavigate(Screen.AddTask.route) },
+                onProfileClick = { safeNavigate(Screen.Profile.route) },
+                onStatClick = { safeNavigate(Screen.Stat.route) },
+                onCalendarClick = { safeNavigate(Screen.Calendar.route) },
+                onEditClick = { task -> safeNavigate(Screen.EditTask.createRoute(task.id)) },
                 taskListViewModel = taskListViewModel
             )
         }
-
 
         composable(Screen.AddTask.route){
             AddTaskScreen(
-                onTaskSubmit = { navController.navigate(Screen.Dashboard.route) },
+                onTaskSubmit = { safeNavigate(Screen.Dashboard.route) },
                 taskListViewModel = taskListViewModel
             )
         }
 
+        // popBackStack() calls don't need throttling (less prone to duplicates)
         composable(Screen.Profile.route){
-            ProfileSection(
-                onBackClick = { navController.popBackStack() }
-            )
+            ProfileSection(onBackClick = { navController.popBackStack() })
         }
 
         composable(Screen.Stat.route){
-            StatScreen(onBackClick = {navController.popBackStack()} )
+            StatScreen(onBackClick = { navController.popBackStack() })
         }
 
-        composable (Screen.Calendar.route){
-            CalendarRoute(
-                onBackClick = {navController.popBackStack()}
-            )
+        composable(Screen.Calendar.route){
+            CalendarRoute(onBackClick = { navController.popBackStack() })
         }
 
-        composable (
+        composable(
             route = Screen.EditTask.route,
             arguments = listOf(navArgument("taskId") { type = NavType.StringType})
         ){ backStackEntry ->
@@ -95,7 +116,7 @@ fun AppNavigation(navController: NavHostController) {
 
             if (taskToEdit != null){
                 EditTaskScreen(
-                    onEditSubmit = { navController.navigate(Screen.Dashboard.route) },
+                    onEditSubmit = { safeNavigate(Screen.Dashboard.route) },
                     taskListViewModel = taskListViewModel,
                     oldTask = taskToEdit
                 )
