@@ -3,6 +3,8 @@ package com.example.assignmenttrack.ui.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,38 +47,36 @@ sealed class Screen(val route: String) {
 fun AppNavigation(navController: NavHostController) {
     val taskListViewModel: TaskListViewModel = hiltViewModel()
 
-    // Navigation throttling state - prevents multiple rapid clicks
     var isNavigating by remember { mutableStateOf(false) }
 
-    // Safe navigation wrapper that blocks duplicate navigation attempts
     val safeNavigate: (String) -> Unit = { route ->
         if (!isNavigating) {
             isNavigating = true
             navController.navigate(route) {
-                launchSingleTop = true // Prevent duplicate destinations
+                launchSingleTop = true
             }
         }
     }
 
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect {
-            isNavigating = false // Re-enable navigation
+            isNavigating = false
         }
     }
 
     NavHost(
         navController = navController,
-        enterTransition = {
-            slideInVertically( animationSpec = tween(1000),
-                initialOffsetY = { it }
-            ) + fadeIn(animationSpec = tween(1000))
+        // Global exit animation for all routes, slides to the left
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec = tween(1000)
+            ) + fadeOut(animationSpec = tween(500))
         },
-        exitTransition = { fadeOut() },
         startDestination = Screen.Dashboard.route
     ) {
-        composable(Screen.Dashboard.route){
+        composable(Screen.Dashboard.route) {
             MainDashboard(
-                // Replace all direct navController.navigate() calls
                 onAddTaskClick = { safeNavigate(Screen.AddTask.route) },
                 onProfileClick = { safeNavigate(Screen.Profile.route) },
                 onStatClick = { safeNavigate(Screen.Stat.route) },
@@ -86,35 +86,77 @@ fun AppNavigation(navController: NavHostController) {
             )
         }
 
-        composable(Screen.AddTask.route){
+        // AddTask: Slide vertical from bottom
+        composable(
+            route = Screen.AddTask.route,
+            enterTransition = {
+                slideInVertically(
+                    animationSpec = tween(1000),
+                    initialOffsetY = { it } // Start from bottom
+                ) + fadeIn(animationSpec = tween(1000))
+            }
+        ) {
             AddTaskScreen(
                 onTaskSubmit = { safeNavigate(Screen.Dashboard.route) },
                 taskListViewModel = taskListViewModel
             )
         }
 
-        // popBackStack() calls don't need throttling (less prone to duplicates)
-        composable(Screen.Profile.route){
+        // Profile: Slide horizontal from left
+        composable(
+            route = Screen.Profile.route,
+            enterTransition = {
+                slideInHorizontally(
+                    animationSpec = tween(1000),
+                    initialOffsetX = { -it } // Start from left
+                ) + fadeIn(animationSpec = tween(1000))
+            }
+        ) {
             ProfileSection(onBackClick = { navController.popBackStack() })
         }
 
-        composable(Screen.Stat.route){
+        // Stat: Slide horizontal from right
+        composable(
+            route = Screen.Stat.route,
+            enterTransition = {
+                slideInHorizontally(
+                    animationSpec = tween(1000),
+                    initialOffsetX = { it } // Start from right
+                ) + fadeIn(animationSpec = tween(1000))
+            }
+        ) {
             StatScreen(onBackClick = { navController.popBackStack() })
         }
 
-        composable(Screen.Calendar.route){
+        // Calendar: Slide horizontal from right
+        composable(
+            route = Screen.Calendar.route,
+            enterTransition = {
+                slideInHorizontally(
+                    animationSpec = tween(1000),
+                    initialOffsetX = { it } // Start from right
+                ) + fadeIn(animationSpec = tween(1000))
+            }
+        ) {
             CalendarRoute(onBackClick = { navController.popBackStack() })
         }
 
+        // EditTask: Slide vertical from bottom
         composable(
             route = Screen.EditTask.route,
-            arguments = listOf(navArgument("taskId") { type = NavType.StringType})
-        ){ backStackEntry ->
+            arguments = listOf(navArgument("taskId") { type = NavType.StringType }),
+            enterTransition = {
+                slideInVertically(
+                    animationSpec = tween(1000),
+                    initialOffsetY = { it } // Start from bottom
+                ) + fadeIn(animationSpec = tween(1000))
+            }
+        ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getString("taskId")
             val tasks by taskListViewModel.tasks.collectAsState(initial = emptyList())
             val taskToEdit = tasks.find { it.id.toString() == taskId }
 
-            if (taskToEdit != null){
+            if (taskToEdit != null) {
                 EditTaskScreen(
                     onEditSubmit = { safeNavigate(Screen.Dashboard.route) },
                     taskListViewModel = taskListViewModel,

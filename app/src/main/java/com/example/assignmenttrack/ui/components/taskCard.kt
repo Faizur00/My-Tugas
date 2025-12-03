@@ -118,7 +118,10 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
                     ) {
                         DropdownMenuItem(
                             text = { Text("Edit", color = Color(0xFF728FFC)) },
-                            onClick = { onEditClick(task) },
+                            onClick = {
+                                onEditClick(task)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.Edit, tint = Color(0xFF456DEE), contentDescription = "Edit")}
                         )
 
@@ -126,7 +129,10 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
 
                         DropdownMenuItem(
                             text = { Text("Complete", color = Color(0xFF728FFC)) },
-                            onClick = { taskListViewModel.completeTask(task.id) },
+                            onClick = {
+                                taskListViewModel.completeTask(task.id)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.CheckCircle, tint = Color(0xFF456DEE), contentDescription = "Complete")}
                         )
 
@@ -134,7 +140,10 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
 
                         DropdownMenuItem(
                             text = { Text("Delete", color = Color(0xFF728FFC)) },
-                            onClick = { taskListViewModel.deleteTask(task.id) },
+                            onClick = {
+                                taskListViewModel.deleteTask(task.id)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.Delete, tint = Color(0xFF456DEE), contentDescription = "Delete")}
                         )
                     }
