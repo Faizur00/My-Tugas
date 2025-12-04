@@ -1,22 +1,19 @@
 package com.example.assignmenttrack
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.example.assignmenttrack.ui.components.ChangeNameDialog
 import com.example.assignmenttrack.ui.navigation.AppNavigation
-import com.example.assignmenttrack.ui.screen.StatScreen
 import com.example.assignmenttrack.ui.theme.AssignmentTrackTheme
-import com.example.assignmenttrack.viewModel.TaskListViewModel
-import com.example.assignmenttrack.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint // Module dipakai mulai bisa dipakai mulai dari sini
 class MainActivity : ComponentActivity() {
@@ -25,10 +22,23 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
+
+            val permissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission(),
+                onResult = { isGranted ->
+                    // You can handle the result here if needed
+                }
+            )
+
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+
             AssignmentTrackTheme {
                 AppNavigation(rememberNavController())
             }
         }
     }
 }
-

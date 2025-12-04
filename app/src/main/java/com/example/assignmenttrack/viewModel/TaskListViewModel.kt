@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 @HiltViewModel
@@ -24,11 +25,12 @@ class TaskListViewModel @Inject constructor(
 
     // Tambah task
     fun addTask(task: Task) {
+        val newId = Random.nextInt(1, Int.MAX_VALUE)
+        val finalTask = task.copy(id = newId)
         viewModelScope.launch {
-            db.insertTask(task)
+            db.insertTask(finalTask)
         }
-
-        db.scheduleLateCheck(context, task = task)
+        db.scheduleLateCheck(context, task = finalTask)
     }
 
     // Hapus task
@@ -36,7 +38,6 @@ class TaskListViewModel @Inject constructor(
         viewModelScope.launch {
             db.deleteTask(taskId)
         }
-
         db.cancelLateCheck(context,taskId)
     }
 
