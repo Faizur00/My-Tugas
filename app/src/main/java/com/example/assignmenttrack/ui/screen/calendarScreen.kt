@@ -36,7 +36,6 @@ import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.CalendarViewModel
-import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.LocalDate
 
 @Composable

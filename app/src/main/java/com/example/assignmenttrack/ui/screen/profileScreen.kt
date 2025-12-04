@@ -3,6 +3,7 @@ package com.example.assignmenttrack.ui.screen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.estimateAnimationDurationMillis
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,14 +53,18 @@ import java.io.File
 fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
     val user by userViewModel.user.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val changeProfilePictureState = remember { mutableStateOf(false) }
+    val changeNameDialogState = remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { userViewModel.updatePhotoProfile(context, uri) }
+    ) { uri ->
+        if (uri != null){
+            userViewModel.updatePhotoProfile(context, uri)
+        }
+        changeProfilePictureState.value = false
     } // Library ambil foto dari galerr, outputnya Uri
 
-    val changeNameDialogState = remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier
             .fillMaxSize(),
@@ -101,7 +108,7 @@ fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: 
                     .align(Alignment.CenterHorizontally)
                     .width(200.dp)
                     .height(200.dp)
-                    .clickable { launcher.launch("image/*") },
+                    .clickable { changeProfilePictureState.value = true },
                 painter =  rememberAsyncImagePainter(
                     model = user.profilePicturePath?.takeIf { it.isNotEmpty() }?.let { File(it) }
                         ?: R.drawable.profile
@@ -153,5 +160,11 @@ fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: 
 //    Change Name Dialog Handler
     if (changeNameDialogState.value){
         ChangeNameDialog(onDismiss = { changeNameDialogState.value = false }, userViewModel = userViewModel)
+    }
+
+    if (changeProfilePictureState.value){
+        LaunchedEffect(Unit) {
+            launcher.launch("image/*")
+        }
     }
 }
