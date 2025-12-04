@@ -30,10 +30,6 @@ class TaskRepository(private val taskDao: TaskDao) {
         return taskDao.getTasksByMonth(monthStr, yearStr)
     }
 
-    fun getTasksByDate(date: Long): Flow<List<Task>> {
-        return taskDao.getTasksByDate(date)
-    }
-
     fun scheduleLateCheck(context: Context, task: Task){
         val workManager = WorkManager.getInstance(context)
 

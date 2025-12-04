@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Brush
@@ -68,7 +69,7 @@ fun CalendarScreen(
     val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = Color(0xFFCAD6FF)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -86,11 +87,11 @@ fun CalendarScreen(
                     year = selectedYear,
                     month = selectedMonth,
                     onDayClick = { day, monthClicked, yearClicked ->
+                        val date = LocalDate.of(yearClicked, monthClicked, day)
+                        viewModel.setSelectedDate(date)
                         if (monthClicked != selectedMonth || yearClicked != selectedYear) {
                             viewModel.changeMonth(monthClicked, yearClicked)
                         }
-                        val date = LocalDate.of(yearClicked, monthClicked, day)
-                        viewModel.setSelectedDate(date)
                     },
                     onMonthChange = { newMonth, newYear ->
                         viewModel.changeMonth(newMonth, newYear)
@@ -175,7 +176,7 @@ fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
+        contentPadding = PaddingValues(top = 16.dp, bottom = 56.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
             TaskCardCalendar(task, modifier = Modifier.fillMaxWidth(), onEditClick = {})
@@ -186,10 +187,12 @@ fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
 
 @Composable
 fun DateText(modifier: Modifier, selectedDate: Triple<Int, Int, Int>?, selectedDateTasks: List<Task>){
-    val message = when {
-        selectedDate == null -> "Select a Date to view Tasks"
-        selectedDateTasks.isEmpty() -> "There is no Task"
-        else -> null
+    val message = remember(selectedDate, selectedDateTasks){
+        when {
+            selectedDate == null -> "Select a Date to view Tasks"
+            selectedDateTasks.isEmpty() -> "There is no Task"
+            else -> null
+        }
     }
 
     if (message != null) {

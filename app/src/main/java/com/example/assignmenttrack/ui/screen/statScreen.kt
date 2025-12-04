@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.ui.components.StatCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
+import com.example.assignmenttrack.uiStateData.defaulStat
 import com.example.assignmenttrack.viewModel.UserViewModel
 
 @Composable

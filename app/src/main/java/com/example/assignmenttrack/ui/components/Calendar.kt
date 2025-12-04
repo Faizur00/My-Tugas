@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,6 +23,9 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +40,7 @@ import com.example.assignmenttrack.ui.utils.CalendarUtils
 @Composable
 fun Calendar(
     modifier: Modifier = Modifier,
-    calendarInput: List<CalendarTask>,
+    calendarInput: CalendarTask,
     year:Int,
     month:Int,
     onDayClick:(Int, Int, Int)->Unit,
@@ -58,6 +62,7 @@ fun Calendar(
                 onMonthChange(newMonth, newYear)
             }
         )
+
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -66,6 +71,7 @@ fun Calendar(
                 .background(Color.White)
                 .padding(16.dp)
         ) {
+
             CalendarDayHeader()
 
             LazyVerticalGrid( // dibagi jadi 7 kolom
@@ -75,7 +81,7 @@ fun Calendar(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(monthData.offset, { "prev_$it"} ) { index -> // kotak-kotak bulan lalu
+                items(monthData.offset, { "prev_$it" } ) { index -> // kotak-kotak bulan lalu
                     val day = monthData.previousMonthStartDay + index
                     val (prevMonth, prevYear) = CalendarUtils.getPreviousMonth(month, year)
                     CalendarDayCells(
@@ -89,8 +95,7 @@ fun Calendar(
 
                 items(monthData.daysInMonth, { it + 1 } ) { index -> // kotak-kotak bulan ini
                     val day = index + 1
-                    val tasks = calendarInput.find { it.day == day }
-                    val hasTask = tasks?.tasks?.isNotEmpty() ?: false
+                    val hasTask = calendarInput.taskByDay[day]?.isNotEmpty() ?: false
                     val isToday = CalendarUtils.isToday(day, month, year)
                     CalendarDayCells(
                         day = day,
@@ -212,71 +217,86 @@ private fun CalendarDayCells(
     isToday: Boolean,
     onClick: () -> Unit
 ){
-    val dateColor: Color = when {
-        hasTask ->
-            Color(0x802260FF)
-        isToday ->
-            Color.White
-        else ->
-            Color.Transparent
+    val dateColor by remember(hasTask, isToday) {
+        mutableStateOf(
+            when {
+                hasTask ->
+                    Color(0x802260FF)
+                isToday ->
+                    Color.White
+                else ->
+                    Color.Transparent
+            }
+        )
     }
 
-    val dateBorderColor: Color = when {
-        isToday ->
-            Color(0xFF2260FF)
-        else ->
-            Color.Transparent
+    val dateBorderColor by remember(isToday){
+        mutableStateOf(
+            when {
+                isToday ->
+                    Color(0xFF2260FF)
+                else ->
+                    Color.Transparent
+            }
+        )
     }
 
-    val textColor: Color = when {
-        !isCurrentMonth ->
-            Color.LightGray
-        hasTask ->
-            Color.White
-        isToday ->
-            Color(0xFF2260FF)
-        else ->
-            Color.Black
+    val textColor by remember(isCurrentMonth, hasTask, isToday){
+        mutableStateOf(
+            when {
+                !isCurrentMonth ->
+                    Color.LightGray
+                hasTask ->
+                    Color.White
+                isToday ->
+                    Color(0xFF2260FF)
+                else ->
+                    Color.Black
+            }
+        )
     }
 
-    val textFont: FontWeight = when {
-        hasTask || isToday ->
-            FontWeight.Bold
-        else ->
-            FontWeight.Normal
+    val textFont by remember(hasTask, isToday){
+        mutableStateOf(
+            when {
+                hasTask || isToday ->
+                    FontWeight.Bold
+                else ->
+                    FontWeight.Normal
+            }
+        )
     }
 
-    val textSize = when {
-        isCurrentMonth ->
-            12.sp
-        else ->
-            10.sp
+    val textSize by remember(isCurrentMonth){
+        mutableStateOf(
+            when {
+                isCurrentMonth ->
+                    12.sp
+                else ->
+                    10.sp
+            }
+        )
     }
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .requiredSize(30.dp)
+            .clip(CircleShape)
+            .background(dateColor)
+            .border(
+                width = 1.25.dp,
+                color = dateBorderColor,
+                shape = CircleShape
+            )
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ){
-        Box(
-            modifier = Modifier
-                .size(30.dp)
-                .clip(CircleShape)
-                .background(dateColor)
-                .border(
-                    width = 1.25.dp,
-                    color = dateBorderColor,
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center
-        ){ Text(
-                text = day.toString(),
-                color = textColor,
-                fontWeight = textFont,
-                fontSize = textSize,
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            text = day.toString(),
+            color = textColor,
+            fontWeight = textFont,
+            fontSize = textSize,
+            textAlign = TextAlign.Center
+        )
     }
 }

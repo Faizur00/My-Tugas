@@ -16,6 +16,7 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.assignmenttrack.database.TaskRepository
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.Instant
@@ -46,7 +46,11 @@ import java.time.ZoneId
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel, onTaskSubmit: () -> Unit) {
+fun TaskForm(
+    modifier: Modifier = Modifier,
+    taskListViewModel: TaskListViewModel,
+    onTaskSubmit: () -> Unit,
+) {
     var assignmentType by remember { mutableStateOf(Task.TaskType.Belajar) }
     var assignmentTitle by remember { mutableStateOf("") }
     var assignmentDescription by remember { mutableStateOf("") }
@@ -146,6 +150,7 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
                             status = null,
                             deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
                         )
+
                         taskListViewModel.addTask(newTask)
                         onTaskSubmit()
                     }
@@ -286,7 +291,3 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
         }
     }
 }
-
-//private fun generateNewId(): Int {
-//    return (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
-//}

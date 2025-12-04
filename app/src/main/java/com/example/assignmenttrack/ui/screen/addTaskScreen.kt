@@ -28,7 +28,7 @@ fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            TaskForm(modifier = Modifier, taskListViewModel = taskListViewModel, onTaskSubmit = onTaskSubmit)
+            TaskForm(taskListViewModel = taskListViewModel, onTaskSubmit = onTaskSubmit,)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
