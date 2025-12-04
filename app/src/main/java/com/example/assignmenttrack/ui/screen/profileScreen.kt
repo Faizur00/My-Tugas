@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,10 +52,15 @@ fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: 
     val user by userViewModel.user.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    var isLauncherActive by remember { mutableStateOf(false) }
+
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { userViewModel.updatePhotoProfile(context, uri) }
+        isLauncherActive = false
+        uri?.let {
+            userViewModel.updatePhotoProfile(context, it)
+        }
     } // Library ambil foto dari galerr, outputnya Uri
 
     val changeNameDialogState = remember { mutableStateOf(false) }
@@ -101,7 +107,12 @@ fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: 
                     .align(Alignment.CenterHorizontally)
                     .width(200.dp)
                     .height(200.dp)
-                    .clickable { launcher.launch("image/*") },
+                    .clickable {
+                        if (!isLauncherActive) {
+                            isLauncherActive = true
+                            launcher.launch("image/*")
+                        }
+                    },
                 painter =  rememberAsyncImagePainter(
                     model = user.profilePicturePath?.takeIf { it.isNotEmpty() }?.let { File(it) }
                         ?: R.drawable.profile
