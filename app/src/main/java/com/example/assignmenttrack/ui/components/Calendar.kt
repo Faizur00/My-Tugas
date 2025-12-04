@@ -75,48 +75,40 @@ fun Calendar(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(monthData.offset) { index -> // kotak-kotak bulan lalu
+                items(monthData.offset, { "prev_$it"} ) { index -> // kotak-kotak bulan lalu
                     val day = monthData.previousMonthStartDay + index
                     val (prevMonth, prevYear) = CalendarUtils.getPreviousMonth(month, year)
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        ongoing = false,
-                        complete = false,
-                        late = false,
+                        hasTask = false,
                         isToday = false,
                         onClick = { onDayClick(day, prevMonth, prevYear) }
                     )
                 }
 
-                items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
+                items(monthData.daysInMonth, { it + 1 } ) { index -> // kotak-kotak bulan ini
                     val day = index + 1
                     val tasks = calendarInput.find { it.day == day }
-                    val ongoing = tasks?.tasks?.any { it.status == null } ?: false
-                    val complete = tasks?.tasks?.any { it.status == true } ?: false
-                    val late = tasks?.tasks?.any { it.status == false } ?: false
+                    val hasTask = tasks?.tasks?.isNotEmpty() ?: false
                     val isToday = CalendarUtils.isToday(day, month, year)
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = true,
-                        ongoing = ongoing,
-                        complete = complete,
-                        late = late,
+                        hasTask = hasTask,
                         isToday = isToday,
                         onClick = { onDayClick(day, month, year) }
                     )
                 }
 
-                items(monthData.remainingCells) { index -> // kotak-kotak bulan depan
+                items(monthData.remainingCells, { "next_$it" } ) { index -> // kotak-kotak bulan depan
                     val day = index + 1
                     val (nextMonth, nextYear) = CalendarUtils.getNextMonth(month, year)
 
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        ongoing = false,
-                        complete = false,
-                        late = false,
+                        hasTask = false,
                         isToday = false,
                         onClick = { onDayClick(day, nextMonth, nextYear) }
                     )
@@ -211,18 +203,56 @@ private fun CalendarDayHeader(){
     }
 }
 
-
 // kotak-kotak di kalender
 @Composable
 private fun CalendarDayCells(
     day: Int,
     isCurrentMonth: Boolean,
+    hasTask: Boolean,
     isToday: Boolean,
-    ongoing: Boolean,
-    complete: Boolean,
-    late: Boolean,
     onClick: () -> Unit
 ){
+    val dateColor: Color = when {
+        hasTask ->
+            Color(0x802260FF)
+        isToday ->
+            Color.White
+        else ->
+            Color.Transparent
+    }
+
+    val dateBorderColor: Color = when {
+        isToday ->
+            Color(0xFF2260FF)
+        else ->
+            Color.Transparent
+    }
+
+    val textColor: Color = when {
+        !isCurrentMonth ->
+            Color.LightGray
+        hasTask ->
+            Color.White
+        isToday ->
+            Color(0xFF2260FF)
+        else ->
+            Color.Black
+    }
+
+    val textFont: FontWeight = when {
+        hasTask || isToday ->
+            FontWeight.Bold
+        else ->
+            FontWeight.Normal
+    }
+
+    val textSize = when {
+        isCurrentMonth ->
+            12.sp
+        else ->
+            10.sp
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,43 +263,18 @@ private fun CalendarDayCells(
             modifier = Modifier
                 .size(30.dp)
                 .clip(CircleShape)
-                .background(
-                    when {
-                        ongoing -> Color(0xFF2260FF)
-                        complete -> Color(0xCC2260FF)
-                        late -> Color(0x802260FF)
-                        isToday -> Color.White
-                        else -> Color.Transparent
-                    },
-                )
+                .background(dateColor)
                 .border(
-                    color = when {
-                        isToday -> Color(0xFF2260FF)
-                        else -> Color.Transparent
-                    },
                     width = 1.25.dp,
+                    color = dateBorderColor,
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center
-        ){
-            Text(
+        ){ Text(
                 text = day.toString(),
-                color = when {
-                    !isCurrentMonth -> Color.LightGray
-                    ongoing -> Color.White
-                    complete -> Color.White
-                    late -> Color.White
-                    isToday -> Color(0xFF2260FF)
-                    else -> Color.Black
-                },
-                fontWeight = when {
-                    isToday || ongoing || complete || late -> FontWeight.Bold
-                    else -> FontWeight.Normal
-                },
-                fontSize = when {
-                    !isCurrentMonth -> 10.sp
-                    else -> 12.sp
-                },
+                color = textColor,
+                fontWeight = textFont,
+                fontSize = textSize,
                 textAlign = TextAlign.Center
             )
         }

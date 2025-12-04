@@ -34,9 +34,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
+import com.example.assignmenttrack.ui.components.TaskCardCalendar
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.CalendarViewModel
-import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.LocalDate
 
 @Composable
@@ -64,7 +64,6 @@ fun CalendarScreen(
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
     val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
     val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
-    val taskListViewModel: TaskListViewModel = hiltViewModel()
     val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
     val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
@@ -114,7 +113,6 @@ fun CalendarScreen(
                     TaskList(
                         modifier = Modifier,
                         tasks = selectedDateTasks,
-                        taskListViewModel = taskListViewModel
                     )
 
                     // Gradien atas
@@ -173,14 +171,14 @@ fun CalendarScreenHeader(onBackClick: () -> Unit){
 }
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel: TaskListViewModel) {
+fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth(), onEditClick = {} , taskListViewModel =  taskListViewModel)
+            TaskCardCalendar(task, modifier = Modifier.fillMaxWidth(), onEditClick = {})
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

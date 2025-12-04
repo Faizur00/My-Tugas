@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,16 +36,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.ui.components.StatCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.UserViewModel
 
 @Composable
-fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
+fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit) {
 
     val stat by viewModel.stat.collectAsStateWithLifecycle()
 
@@ -99,9 +103,6 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
     }
 
 
-
-
-
     Surface(color = Color(0xFFCAD6FF)){
         Box(
             modifier = Modifier
@@ -120,6 +121,22 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
                     tint = Color(0xFF2260FF)
                 )
             }
+
+            IconButton(
+                onClick = { viewModel.resetStat() },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 25.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Reset Stat",
+                    tint = Color(0xFF2260FF),
+                    modifier = Modifier
+                        .size(30.dp)
+                )
+            }
+
 
             Column(
                 modifier = Modifier

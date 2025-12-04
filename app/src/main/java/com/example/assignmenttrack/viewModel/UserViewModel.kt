@@ -5,6 +5,7 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.database.UserRepository
 import com.example.assignmenttrack.model.Stat
 import com.example.assignmenttrack.model.User
@@ -63,13 +64,19 @@ class UserViewModel @Inject constructor(
         }
     }
 
-
     fun updateName(name: String) {
         viewModelScope.launch {
             userRepository.updateName(name)
             _user.value = _user.value.copy(name = name)
         }
     }
+
+    fun resetStat(){
+        viewModelScope.launch {
+            userRepository.deleteAllTasks()
+        }
+    }
+
 
     private fun saveProfilePhoto(context: Context, uri: Uri): String? {
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null

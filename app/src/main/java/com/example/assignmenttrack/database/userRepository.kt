@@ -12,6 +12,7 @@ class UserRepository(private val userDao: UserDao, private val taskDao: TaskDao)
     // Flow untuk stat
     fun getStat() = taskDao.getStat()
 
+    suspend fun deleteAllTasks() = taskDao.deleteAllTasks()
     suspend fun updateName(name: String) = userDao.updateName(name)
     suspend fun updatePhotoProfile(path: String) = userDao.updatePhotoProfile(path)
 

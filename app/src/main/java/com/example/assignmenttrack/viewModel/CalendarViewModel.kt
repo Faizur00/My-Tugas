@@ -56,7 +56,6 @@ class CalendarViewModel @Inject constructor(private val repository: TaskReposito
         }
     }
 
-
     fun refreshCalendarTasks(month: Int, year: Int) {
         viewModelScope.launch {
             repository.getTasksByMonth(month, year).collect { tasks ->
