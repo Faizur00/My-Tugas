@@ -140,7 +140,7 @@ fun TaskForm(
                 onClick = {
                     if (LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant() > (selectedDateTime.atZone(ZoneId.systemDefault()).toInstant())) {
                         hasError = true
-                        errorMessage = "Due date cannot be in the past or in current time"
+                        errorMessage = "Please Assign a date and time in the future"
                     } else {
                         hasError = false
                         val newTask = Task(
