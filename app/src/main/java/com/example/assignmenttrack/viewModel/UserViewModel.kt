@@ -14,6 +14,7 @@ import com.example.assignmenttrack.uiStateData.defaultUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -31,9 +32,9 @@ class UserViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            refreshStat()
             userRepository.initUser()
             refreshUser()
-            refreshStat()
         }
     }
 

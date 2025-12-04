@@ -68,7 +68,7 @@ fun TaskListScreen(
     val tasks by taskViewModel.tasks.collectAsState(initial = emptyList())
     LazyColumn(
         modifier = modifier.padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 128.dp)
+        contentPadding = PaddingValues(top = 8.dp, bottom = 120.dp)
     ){
         val filteredTasks = tasks.filter { it.status == null }
 

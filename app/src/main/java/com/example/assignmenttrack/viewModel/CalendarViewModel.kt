@@ -2,13 +2,16 @@ package com.example.assignmenttrack.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.database.TaskRepository
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.model.CalendarTask
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
@@ -33,42 +36,42 @@ class CalendarViewModel @Inject constructor(private val repository: TaskReposito
     private val _selectedDateTasks = MutableStateFlow<List<Task>>(emptyList())
     val selectedDateTasks: StateFlow<List<Task>> = _selectedDateTasks.asStateFlow()
 
-    private val _calendarTasks = MutableStateFlow<List<CalendarTask>>(emptyList())
-    val calendarTasks: StateFlow<List<CalendarTask>> = _calendarTasks.asStateFlow()
-
+    private val _calendarTasks = MutableStateFlow<CalendarTask>(CalendarTask(emptyMap()))
+    val calendarTasks: StateFlow<CalendarTask> = _calendarTasks.asStateFlow()
 
     init {
         refreshCalendarTasks(
             _selectedMonth.value,
             _selectedYear.value)
     }
+
     fun setSelectedDate(date: LocalDate) {
-        _selectedDate.value = date
-        _selectedDateTriple.value = Triple(date.dayOfMonth, date.monthValue, date.year)
-
-        val millis = date.atStartOfDay(ZoneOffset.UTC)
-            .toInstant().toEpochMilli()
-
         viewModelScope.launch {
-            repository.getTasksByDate(millis).collect { list ->
-                _selectedDateTasks.value = list
-            }
+            _selectedDate.value = date
+            _selectedDateTriple.value = Triple(date.dayOfMonth, date.monthValue, date.year)
+
+            _selectedDateTasks.value = _calendarTasks.value.taskByDay[date.dayOfMonth] ?: emptyList()
         }
     }
 
     fun refreshCalendarTasks(month: Int, year: Int) {
         viewModelScope.launch {
-            repository.getTasksByMonth(month, year).collect { tasks ->
+            repository.getTasksByMonth(month, year)
+                .map { tasks ->
+                    val grouped = tasks
+                        .groupBy { task ->
+                            task.deadline
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .dayOfMonth
+                        }
+                        .toSortedMap()
 
-                val grouped = tasks.groupBy {
-                    it.deadline.atZone(ZoneId.systemDefault())
-                        .toLocalDate().dayOfMonth
-                }.map { (day, tasksForDay) ->
-                    CalendarTask(day, tasksForDay)
+                    CalendarTask(taskByDay = grouped)
                 }
-
-                _calendarTasks.value = grouped
-            }
+                .collect { calendarTask ->
+                    _calendarTasks.value = calendarTask
+                }
         }
     }
 
