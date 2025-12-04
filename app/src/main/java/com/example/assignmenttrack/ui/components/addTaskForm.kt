@@ -55,6 +55,9 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
     var selectedDateTime by remember { mutableStateOf(LocalDateTime.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
+    var hasError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
 
     LazyColumn(
         modifier = modifier
@@ -96,6 +99,15 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
                 onTimeClick = { showTimePicker = true }
             )
         }
+        item {
+            if (hasError) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
 
         item {
             Spacer(modifier = Modifier.padding(8.dp))
@@ -122,19 +134,21 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
                     .padding(all = 16.dp),
                 text = "Tambah Tugas",
                 onClick = {
-                    val newTask = Task(
-                        type = assignmentType,
-                        title = assignmentTitle,
-                        description = assignmentDescription,
-                        status = if (LocalDateTime.now().atZone(ZoneId.systemDefault()).isAfter(selectedDateTime.atZone(ZoneId.systemDefault()))) {
-                            false
-                        } else {
-                            null
-                        },
-                        deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
-                    )
-                    taskListViewModel.addTask(newTask)
-                    onTaskSubmit()
+                    if (LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant() > (selectedDateTime.atZone(ZoneId.systemDefault()).toInstant())) {
+                        hasError = true
+                        errorMessage = "Due date cannot be in the past or in current time"
+                    } else {
+                        hasError = false
+                        val newTask = Task(
+                            type = assignmentType,
+                            title = assignmentTitle,
+                            description = assignmentDescription,
+                            status = null,
+                            deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
+                        )
+                        taskListViewModel.addTask(newTask)
+                        onTaskSubmit()
+                    }
                 }
             )
         }

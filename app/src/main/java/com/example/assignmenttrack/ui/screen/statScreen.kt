@@ -128,7 +128,7 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "My Statistik",
+                    text = "My Stats",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = leagueSpartan,
@@ -144,7 +144,7 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Aktivitas: \n ${stat.taskTotal}",
+                        text = "Activity: \n ${stat.taskTotal}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -260,22 +260,22 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     StatCard(
-                        label = "Persentase Tepat Waktu:",
+                        label = "On Time Percentage",
                         value = "${(animatedOnTimeStat).toInt()}%",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
-                        label = "Total Belajar",
+                        label = "Learn Total" ,
                         value = "${(animatedTotalStudy).toInt()}",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
-                        label = "Total Kerja",
+                        label = "Work Total",
                         value = "${(animatedTotalWork).toInt()}",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
-                        label = "Total Tugas",
+                        label = "Task Total",
                         value = "${(animatedTotalAssignment).toInt()}",
                         color = Color(0xFF2260FF)
                     )
